@@ -105,6 +105,8 @@ public class MeiZiTuFragment extends MvpFragment<MeiZiTuView, MeiZiTuPresenter> 
                 }
                 Intent intent = new Intent(context, PictureViewerActivity.class);
                 intent.putExtra(Keys.KEY_INTENT_MEI_ZI_TU_CONTENT_ID, meiZiTu.getId());
+                // refer
+                intent.putExtra(Keys.KEY_INTENT_WEB_REFER, meiZiTu.getRefer());
                 startActivityWithAnimation(intent);
             }
         });

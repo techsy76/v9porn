@@ -78,4 +78,5 @@
     <string name="send_icon">sendIcon</string>
     <string name="address_axgle">设置A*gle的API地址</string>
     <string name="search_jav_video">搜Jav视频</string>
+    <string name="copy_url">复制</string>
 </resources>

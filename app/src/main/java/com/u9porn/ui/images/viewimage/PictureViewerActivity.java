@@ -88,9 +88,13 @@ public class PictureViewerActivity extends MvpActivity<PictureViewerView, Pictur
         if (imageList == null) {
             imageList = new ArrayList<>();
         }
-        pictureAdapter = new PictureAdapter(imageList);
+
+        String refer = getIntent().getStringExtra(Keys.KEY_INTENT_WEB_REFER);
+
+        pictureAdapter = new PictureAdapter(imageList, refer);
         viewPager.setAdapter(pictureAdapter);
         viewPager.setCurrentItem(currentPosition);
+
         int id = getIntent().getIntExtra(Keys.KEY_INTENT_MEI_ZI_TU_CONTENT_ID, 0);
         if (id > 0) {
             presenter.listMeZiPicture(id, false);
@@ -102,7 +106,7 @@ public class PictureViewerActivity extends MvpActivity<PictureViewerView, Pictur
     }
 
     private void initListener() {
-        pictureAdapter.setOnImageClickListener(new PictureAdapter.onImageClickListener() {
+        pictureAdapter.setOnImageClickListener(new PictureAdapter.OnImageClickListener() {
             @Override
             public void onImageClick(View view, int position) {
                 if (isFullScreen) {

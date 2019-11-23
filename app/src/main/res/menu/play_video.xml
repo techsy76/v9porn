@@ -30,6 +30,13 @@
         android:icon="@drawable/ic_share_black_24dp"
         app:showAsAction="never" />
     <item
+        android:id="@+id/menu_copy_url"
+        android:orderInCategory="100"
+        android:title="@string/copy_url"
+        app:iconTint="@color/common_primary_white_text_color"
+        android:icon="@drawable/ic_content_copy_black_24dp"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/menu_play_close"
         android:orderInCategory="100"
         android:title="@string/close"

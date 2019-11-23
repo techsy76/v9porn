@@ -1,5 +1,6 @@
 package com.u9porn.adapter;
 
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
@@ -38,7 +39,11 @@ public class MeiZiTuAdapter extends BaseQuickAdapter<MeiZiTu, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, MeiZiTu item) {
         ImageView imageView = helper.getView(R.id.iv_item_mei_zi_tu);
-        GlideApp.with(helper.itemView.getContext()).load(buildGlideUrl(item.getThumbUrl())).transition(new DrawableTransitionOptions().crossFade(300)).into(imageView);
+
+        GlideUrl glideUrl = buildGlideUrl(item.getThumbUrl(), item.getRefer());
+
+        GlideApp.with(helper.itemView.getContext()).load(glideUrl).transition(new DrawableTransitionOptions().crossFade(300)).into(imageView);
+
         int height;
         if (!heightMap.containsKey(item.getThumbUrl())) {
             height = item.getHeight() * width / item.getWidth();
@@ -51,16 +56,23 @@ public class MeiZiTuAdapter extends BaseQuickAdapter<MeiZiTu, BaseViewHolder> {
         helper.itemView.setLayoutParams(layoutParams);
     }
 
-    private GlideUrl buildGlideUrl(String url) {
+    private GlideUrl buildGlideUrl(String url, String refer) {
         if (TextUtils.isEmpty(url)) {
             return null;
         } else {
-            return new GlideUrl(url, new LazyHeaders.Builder()
+            Uri uri = Uri.parse(url);
+            String host = uri.getHost();
+
+            LazyHeaders.Builder builder = new LazyHeaders.Builder()
                     .addHeader("Accept-Language", "zh-CN,zh;q=0.9,zh-TW;q=0.8")
-                    .addHeader("Host", "i.meizitu.net")
-                    .addHeader("Referer", "http://www.mzitu.com/")
-                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
-                    .build());
+                    .addHeader("Referer", refer)
+                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            if (host != null) {
+                builder.addHeader("Host", host);
+
+            }
+
+            return new GlideUrl(url, builder.build());
         }
     }
 }

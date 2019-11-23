@@ -24,9 +24,9 @@ import com.orhanobut.logger.Logger;
 import com.u9porn.R;
 import com.u9porn.utils.GlideApp;
 
+import java.util.Collections;
 import java.util.List;
-
-import okhttp3.HttpUrl;
+import java.util.Map;
 
 /**
  * @author flymegoc
@@ -37,10 +37,21 @@ public class PictureAdapter extends PagerAdapter {
 
     private static final String TAG = PictureAdapter.class.getSimpleName();
     private List<String> imageList;
-    private onImageClickListener onImageClickListener;
+    private OnImageClickListener onImageClickListener;
+    private Map<String, String> headers;
+
+    public PictureAdapter(List<String> imageList, String referer) {
+        // 用得多
+        this(imageList, Collections.singletonMap("Referer", referer));
+    }
 
     public PictureAdapter(List<String> imageList) {
         this.imageList = imageList;
+    }
+
+    public PictureAdapter(List<String> imageList, Map<String, String> headers) {
+        this.imageList = imageList;
+        this.headers = headers;
     }
 
     @Override
@@ -58,35 +69,23 @@ public class PictureAdapter extends PagerAdapter {
         final ProgressBar progressBar = contentView.findViewById(R.id.progressBar);
         //http://i.meizitu.net/2018/01/25c01.jpg
         String url = imageList.get(position);
-        if (url.contains("meizitu.net")) {
-            GlideApp.with(container).load(buildGlideUrl(url)).transition(new DrawableTransitionOptions().crossFade(300)).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    progressBar.setVisibility(View.GONE);
-                    return false;
-                }
 
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    progressBar.setVisibility(View.GONE);
-                    return false;
-                }
-            }).into(photoView);
-        } else {
-            GlideApp.with(container).load(buildGlide99MMUrl(url)).transition(new DrawableTransitionOptions().crossFade(300)).listener(new RequestListener<Drawable>() {
-                @Override
-                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                    progressBar.setVisibility(View.GONE);
-                    return false;
-                }
+        GlideApp.with(container)
+                .load(buildGlideUrl(url))
+                .transition(new DrawableTransitionOptions().crossFade(300)).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                progressBar.setVisibility(View.GONE);
+                return false;
+            }
 
-                @Override
-                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                    progressBar.setVisibility(View.GONE);
-                    return false;
-                }
-            }).into(photoView);
-        }
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                progressBar.setVisibility(View.GONE);
+                return false;
+            }
+        }).into(photoView);
+
         // Now just add PhotoView to ViewPager and return it
         container.addView(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         photoView.setOnClickListener(new View.OnClickListener() {
@@ -132,40 +131,44 @@ public class PictureAdapter extends PagerAdapter {
         return view == object;
     }
 
-    public interface onImageClickListener {
+    public interface OnImageClickListener {
         void onImageClick(View view, int position);
 
         void onImageLongClick(View view, int position);
     }
 
-    public void setOnImageClickListener(PictureAdapter.onImageClickListener onImageClickListener) {
+    public void setOnImageClickListener(PictureAdapter.OnImageClickListener onImageClickListener) {
         this.onImageClickListener = onImageClickListener;
     }
 
-    private GlideUrl buildGlideUrl(String url) {
+    /**
+     * build glide url 重写实现
+     *
+     * @param url
+     * @return
+     */
+    protected GlideUrl buildGlideUrl(String url) {
         if (TextUtils.isEmpty(url)) {
             return null;
         } else {
-            return new GlideUrl(url, new LazyHeaders.Builder()
-                    .addHeader("Accept-Language", "zh-CN,zh;q=0.9,zh-TW;q=0.8")
-                    .addHeader("Host", "i.meizitu.net")
-                    .addHeader("Referer", "http://www.mzitu.com/")
-                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
-                    .build());
-        }
-    }
 
-    private GlideUrl buildGlide99MMUrl(String url) {
-        if (TextUtils.isEmpty(url)) {
-            return null;
-        } else {
-            HttpUrl httpUrl=HttpUrl.parse(url);
-            return new GlideUrl(url, new LazyHeaders.Builder()
+            Uri parse = Uri.parse(url);
+            LazyHeaders.Builder builder = new LazyHeaders.Builder()
                     .addHeader("Accept-Language", "zh-CN,zh;q=0.9,zh-TW;q=0.8")
-                    .addHeader("Host", httpUrl != null ? httpUrl.host() : "img.99mm.net")
-                    .addHeader("Referer", "http://www.99mm.me/")
-                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
-                    .build());
+                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            if (parse.getHost() != null) {
+                builder.addHeader("Host", parse.getHost());
+            }
+
+            if (headers != null) {
+                for (Map.Entry<String, String> h : headers.entrySet()) {
+                    if (h.getKey() != null && h.getValue() != null) {
+                        builder.addHeader(h.getKey(), h.getValue());
+                    }
+                }
+            }
+
+            return new GlideUrl(url, builder.build());
         }
     }
 }

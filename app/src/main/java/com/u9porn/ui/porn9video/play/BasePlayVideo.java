@@ -1,5 +1,8 @@
 package com.u9porn.ui.porn9video.play;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -148,7 +151,7 @@ public abstract class BasePlayVideo extends MvpActivity<PlayVideoView, PlayVideo
                 videoListFragment.setPosition(position);
                 fragments.add(videoListFragment);
             }
-        }else {
+        } else {
             //TODO
         }
 
@@ -355,9 +358,31 @@ public abstract class BasePlayVideo extends MvpActivity<PlayVideoView, PlayVideo
         } else if (id == R.id.menu_play_close) {
             floatingToolbar.hide();
             return true;
+        } else if (id == R.id.menu_copy_url) {
+            String videoUrl = getVideoUrl();
+            if (videoUrl != null) {
+                ClipboardManager cmb = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                if (cmb != null) {
+                    cmb.setPrimaryClip(ClipData.newPlainText(null, videoUrl));
+                }
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    private String getVideoUrl() {
+        if (v9PornItem == null || v9PornItem.getVideoResultId() == 0) {
+            showMessage("还未成功解析视频链接，不能分享！", TastyToast.INFO);
+            return null;
+        }
+        String url = v9PornItem.getVideoResult().getVideoUrl();
+        if (TextUtils.isEmpty(url)) {
+            showMessage("还未成功解析视频链接，不能分享！", TastyToast.INFO);
+            return null;
+        }
+        return url;
     }
 
     private void startDownloadVideo() {
@@ -386,13 +411,8 @@ public abstract class BasePlayVideo extends MvpActivity<PlayVideoView, PlayVideo
     }
 
     private void shareVideoUrl() {
-        if (v9PornItem == null || v9PornItem.getVideoResultId() == 0) {
-            showMessage("还未成功解析视频链接，不能分享！", TastyToast.INFO);
-            return;
-        }
-        String url = v9PornItem.getVideoResult().getVideoUrl();
-        if (TextUtils.isEmpty(url)) {
-            showMessage("还未成功解析视频链接，不能分享！", TastyToast.INFO);
+        String url = getVideoUrl();
+        if (url == null) {
             return;
         }
         Intent textIntent = new Intent(Intent.ACTION_SEND);

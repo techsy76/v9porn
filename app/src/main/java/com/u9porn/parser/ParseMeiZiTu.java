@@ -22,7 +22,7 @@ import java.util.List;
 public class ParseMeiZiTu {
     private static final String TAG = ParseMeiZiTu.class.getSimpleName();
 
-    public static BaseResult<List<MeiZiTu>> parseMeiZiTuList(String html, int page) {
+    public static BaseResult<List<MeiZiTu>> parseMeiZiTuList(String html, int page, String refer) {
         BaseResult<List<MeiZiTu>> baseResult = new BaseResult<>();
         baseResult.setTotalPage(1);
         Document doc = Jsoup.parse(html);
@@ -35,6 +35,9 @@ public class ParseMeiZiTu {
                 continue;
             }
             MeiZiTu meiZiTu = new MeiZiTu();
+
+            meiZiTu.setRefer(refer);
+
             String contentUrl = contentElement.attr("href");
             //meiZiTu.setContentUrl(contentUrl);
             int index = contentUrl.lastIndexOf("/");

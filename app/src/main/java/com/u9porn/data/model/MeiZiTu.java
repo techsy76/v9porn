@@ -18,6 +18,7 @@ public class MeiZiTu implements Serializable {
     private String thumbUrl;
     private int height;
     private int width;
+    private String refer;
 
     public int getId() {
         return id;
@@ -73,5 +74,13 @@ public class MeiZiTu implements Serializable {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    public String getRefer() {
+        return refer;
+    }
+
+    public void setRefer(String refer) {
+        this.refer = refer;
     }
 }

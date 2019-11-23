@@ -1,6 +1,5 @@
 package com.u9porn.adapter;
 
-import android.support.annotation.Nullable;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.widget.ImageView;
@@ -12,11 +11,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.u9porn.R;
 import com.u9porn.data.model.HuaBan;
-import com.u9porn.data.model.MeiZiTu;
 import com.u9porn.utils.GlideApp;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,7 +56,7 @@ public class HuaBanAdapter extends BaseQuickAdapter<HuaBan.Picture, BaseViewHold
             return new GlideUrl(url, new LazyHeaders.Builder()
                     .addHeader("Accept-Language", "zh-CN,zh;q=0.9,zh-TW;q=0.8")
                     .addHeader("Host", "i.meizitu.net")
-                    .addHeader("Referer", "http://www.mzitu.com/")
+                    .addHeader("Referer", "https://www.mzitu.com/")
                     .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
                     .build());
         }
