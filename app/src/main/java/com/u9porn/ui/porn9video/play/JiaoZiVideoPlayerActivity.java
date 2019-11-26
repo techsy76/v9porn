@@ -7,15 +7,16 @@ import android.view.View;
 
 import com.u9porn.R;
 
-import cn.jzvd.JZVideoPlayer;
-import cn.jzvd.JZVideoPlayerStandard;
+import cn.jzvd.Jzvd;
+import cn.jzvd.JzvdStd;
 
 /**
  * @author flymegoc
  */
 public class JiaoZiVideoPlayerActivity extends BasePlayVideo {
 
-    JZVideoPlayerStandard jzVideoPlayerStandard;
+    JzvdStd jzVideoPlayerStandard;
+    // JZVideoPlayerStandard jzVideoPlayerStandard;
 
     @Override
     public void initPlayerView() {
@@ -27,7 +28,7 @@ public class JiaoZiVideoPlayerActivity extends BasePlayVideo {
     @Override
     public void playVideo(String title, String videoUrl, String name, String thumImgUrl) {
         jzVideoPlayerStandard.setVisibility(View.VISIBLE);
-        jzVideoPlayerStandard.setUp(videoUrl, JZVideoPlayerStandard.SCREEN_WINDOW_NORMAL, title);
+        jzVideoPlayerStandard.setUp(videoUrl, title, Jzvd.SCREEN_NORMAL);
         //自动播放
         jzVideoPlayerStandard.startButton.performClick();
         if (!TextUtils.isEmpty(thumImgUrl)) {
@@ -37,7 +38,7 @@ public class JiaoZiVideoPlayerActivity extends BasePlayVideo {
 
     @Override
     public void onBackPressed() {
-        if (JZVideoPlayer.backPress()) {
+        if (Jzvd.backPress()) {
             return;
         }
         super.onBackPressed();
@@ -46,6 +47,6 @@ public class JiaoZiVideoPlayerActivity extends BasePlayVideo {
     @Override
     protected void onPause() {
         super.onPause();
-        JZVideoPlayer.releaseAllVideos();
+        Jzvd.releaseAllVideos();
     }
 }

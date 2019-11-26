@@ -1,8 +1,8 @@
 package com.u9porn;
 
 import android.content.Context;
-import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.multidex.MultiDex;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.helper.loadviewhelper.load.LoadViewHelper;
 import com.liulishuo.filedownloader.FileDownloader;

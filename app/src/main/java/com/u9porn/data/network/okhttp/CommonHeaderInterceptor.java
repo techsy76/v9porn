@@ -1,8 +1,8 @@
 package com.u9porn.data.network.okhttp;
 
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.orhanobut.logger.Logger;
 import com.u9porn.data.network.Api;
@@ -10,6 +10,7 @@ import com.u9porn.data.prefs.PreferencesHelper;
 import com.u9porn.eventbus.UrlRedirectEvent;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -38,6 +39,7 @@ public class CommonHeaderInterceptor implements Interceptor {
         this.preferencesHelper = preferencesHelper;
     }
 
+    @NotNull
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         //统一设置请求头
@@ -48,6 +50,8 @@ public class CommonHeaderInterceptor implements Interceptor {
         if (!TextUtils.isEmpty(header) && header.equals(Api.PORN9_VIDEO_DOMAIN_NAME)) {
             //返回的地址
             Response response = chain.proceed(original);
+            //TODO OkHttp bug? need close ?
+            response.close();
             HttpUrl httpUrl = response.request().url();
             //读取本地地址
             String url = preferencesHelper.getPorn9VideoAddress();
@@ -66,6 +70,8 @@ public class CommonHeaderInterceptor implements Interceptor {
         } else if (!TextUtils.isEmpty(header) && header.equals(Api.PORN9_FORUM_DOMAIN_NAME)) {
             //返回的地址
             Response response = chain.proceed(original);
+            //TODO OkHttp bug? need close ?
+            response.close();
             HttpUrl httpUrl = response.request().url();
             //读取本地地址
             String url = preferencesHelper.getPorn9ForumAddress();

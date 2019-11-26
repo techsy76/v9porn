@@ -3,19 +3,20 @@ package com.u9porn.ui.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.devbrackets.android.exomedia.util.ResourceUtil;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.orhanobut.logger.Logger;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
@@ -55,7 +56,6 @@ import com.u9porn.utils.NotificationChannelHelper;
 import com.u9porn.utils.SDCardUtils;
 import com.u9porn.utils.Tags;
 import com.yanzhenjie.permission.AndPermission;
-import com.yanzhenjie.permission.PermissionListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -434,66 +434,44 @@ public class MainActivity extends MvpActivity<MainView, MainPresenter> implement
      * 申请权限并创建下载目录
      */
     private void makeDirAndCheckPermission() {
-        if (!AndPermission.hasPermission(MainActivity.this, permission)) {
+        if (!AndPermission.hasPermissions(MainActivity.this, permission)) {
+
             AndPermission.with(this)
-                    .requestCode(permisionCode)
+                    .runtime()
                     .permission(permission)
-                    .rationale((requestCode, rationale) -> {
-                        // 此对话框可以自定义，调用rationale.resume()就可以继续申请。
-                        AndPermission.rationaleDialog(MainActivity.this, rationale).show();
+                    .onGranted(grantedPermissions -> {
+                        File file = new File(SDCardUtils.DOWNLOAD_VIDEO_PATH);
+
+                        // 这里的requestCode就是申请时设置的requestCode。
+                        // 和onActivityResult()的requestCode一样，用来区分多个不同的请求。
+
+                        if (AndPermission.hasPermissions(MainActivity.this, grantedPermissions.toArray(new String[]{}))) {
+                            if (!file.exists()) {
+                                if (!file.mkdirs()) {
+                                    showMessage("创建下载目录失败了", TastyToast.ERROR);
+                                }
+                            }
+                        }
+
                     })
-                    .callback(listener)
+                    .onDenied(deniedPermissions -> {
+                        if (!AndPermission.hasPermissions(MainActivity.this, deniedPermissions.toArray(new String[]{}))) {
+                            // 是否有不再提示并拒绝的权限。
+                            if (AndPermission.hasAlwaysDeniedPermission(MainActivity.this, deniedPermissions)) {
+                                // 第一种：用AndPermission默认的提示语。
+//                                AndPermission.defaultSettingDialog(MainActivity.this, permisionReqCode).show();
+                            }
+                        }
+                    })
                     .start();
         }
     }
-
-    private PermissionListener listener = new PermissionListener() {
-        File file = new File(SDCardUtils.DOWNLOAD_VIDEO_PATH);
-
-        @Override
-        public void onSucceed(int requestCode, @NonNull List<String> grantedPermissions) {
-            // 权限申请成功回调。
-
-            // 这里的requestCode就是申请时设置的requestCode。
-            // 和onActivityResult()的requestCode一样，用来区分多个不同的请求。
-            if (requestCode == permisionCode) {
-                // TODO ...
-                if (AndPermission.hasPermission(MainActivity.this, grantedPermissions)) {
-                    if (!file.exists()) {
-                        if (!file.mkdirs()) {
-                            showMessage("创建下载目录失败了", TastyToast.ERROR);
-                        }
-                    }
-                } else {
-                    AndPermission.defaultSettingDialog(MainActivity.this, permisionReqCode).show();
-                }
-            }
-        }
-
-        @Override
-        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
-            // 权限申请失败回调。
-            if (requestCode == permisionCode) {
-                // TODO ...
-                if (!AndPermission.hasPermission(MainActivity.this, deniedPermissions)) {
-                    // 是否有不再提示并拒绝的权限。
-                    if (AndPermission.hasAlwaysDeniedPermission(MainActivity.this, deniedPermissions)) {
-                        // 第一种：用AndPermission默认的提示语。
-                        AndPermission.defaultSettingDialog(MainActivity.this, permisionReqCode).show();
-                    } else {
-                        AndPermission.defaultSettingDialog(MainActivity.this, permisionReqCode).show();
-                    }
-                }
-            }
-        }
-    };
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == permisionReqCode) {
-            if (!AndPermission.hasPermission(MainActivity.this, permission)) {
+            if (!AndPermission.hasPermissions(MainActivity.this, permission)) {
                 showMessage("你拒绝了读写存储卡权限，这将影响下载视频等功能！", TastyToast.WARNING);
             }
         }

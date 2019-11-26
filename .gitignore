@@ -1,0 +1,16 @@
+
+mapping.txt
+output.json
+seeds.txt
+unused.txt
+local.properties
+
+*.apk
+*.iml
+*.bin
+*.zip
+
+
+.idea/
+.gradle/
+build/

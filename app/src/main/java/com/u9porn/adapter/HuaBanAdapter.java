@@ -1,6 +1,6 @@
 package com.u9porn.adapter;
 
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.widget.ImageView;
 

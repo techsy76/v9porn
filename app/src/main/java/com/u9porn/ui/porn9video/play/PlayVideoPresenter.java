@@ -1,6 +1,6 @@
 package com.u9porn.ui.porn9video.play;
 
-import android.arch.lifecycle.Lifecycle;
+import androidx.lifecycle.Lifecycle;
 import android.text.TextUtils;
 import android.webkit.WebView;
 

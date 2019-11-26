@@ -111,9 +111,12 @@
 -dontwarn okio.**
 
 #butterknife
--keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
--keep class **$$ViewBinder { *; }
+
+-keep public class * implements butterknife.Unbinder { public <init>(**, android.view.View); }
+-keep class butterknife.*
+-keepclasseswithmembernames class * { @butterknife.* <methods>; }
+-keepclasseswithmembernames class * { @butterknife.* <fields>; }
+
 
 #保持枚举 enum 类不被混淆
 -keepclassmembers enum * {
@@ -196,9 +199,9 @@
    public *;
 }
 
-## 保持自定义实体类不被混淆
--keep class com.u9porn.data.model.** { *; }
--keep class com.u9porn.data.db.** { *; }
+## 当前代码不
+-keep class com.u9porn.** { *; }
+
 ## greenDao ##
 -keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
 public static java.lang.String TABLENAME;
@@ -267,3 +270,14 @@ public static java.lang.String TABLENAME;
 -dontoptimize
 -dontwarn com.alibaba.sdk.android.utils.**
 -dontwarn cn.qqtheme.framework.util.**
+
+
+# jiaozi video
+-keep public class cn.jzvd.JZMediaSystem {*; }
+-keep public class cn.jzvd.demo.CustomMedia.CustomMedia {*; }
+-keep public class cn.jzvd.demo.CustomMedia.JZMediaIjk {*; }
+-keep public class cn.jzvd.demo.CustomMedia.JZMediaSystemAssertFolder {*; }
+
+-keep class tv.danmaku.ijk.media.player.** {*; }
+-dontwarn tv.danmaku.ijk.media.player.*
+-keep interface tv.danmaku.ijk.media.player.** { *; }
