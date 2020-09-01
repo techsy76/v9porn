@@ -1,10 +1,9 @@
 package com.u9porn.adapter;
 
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.PagerAdapter;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +23,9 @@ import com.orhanobut.logger.Logger;
 import com.u9porn.R;
 import com.u9porn.utils.GlideApp;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
+import okhttp3.HttpUrl;
 
 /**
  * @author flymegoc
@@ -37,21 +36,10 @@ public class PictureAdapter extends PagerAdapter {
 
     private static final String TAG = PictureAdapter.class.getSimpleName();
     private List<String> imageList;
-    private OnImageClickListener onImageClickListener;
-    private Map<String, String> headers;
-
-    public PictureAdapter(List<String> imageList, String referer) {
-        // 用得多
-        this(imageList, Collections.singletonMap("Referer", referer));
-    }
+    private onImageClickListener onImageClickListener;
 
     public PictureAdapter(List<String> imageList) {
         this.imageList = imageList;
-    }
-
-    public PictureAdapter(List<String> imageList, Map<String, String> headers) {
-        this.imageList = imageList;
-        this.headers = headers;
     }
 
     @Override
@@ -69,10 +57,7 @@ public class PictureAdapter extends PagerAdapter {
         final ProgressBar progressBar = contentView.findViewById(R.id.progressBar);
         //http://i.meizitu.net/2018/01/25c01.jpg
         String url = imageList.get(position);
-
-        GlideApp.with(container)
-                .load(buildGlideUrl(url))
-                .transition(new DrawableTransitionOptions().crossFade(300)).listener(new RequestListener<Drawable>() {
+        GlideApp.with(container).load(buildGlideUrl(url)).transition(new DrawableTransitionOptions().crossFade(300)).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 progressBar.setVisibility(View.GONE);
@@ -85,25 +70,19 @@ public class PictureAdapter extends PagerAdapter {
                 return false;
             }
         }).into(photoView);
-
         // Now just add PhotoView to ViewPager and return it
         container.addView(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        photoView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onImageClickListener != null) {
-                    onImageClickListener.onImageClick(v, position);
-                }
+
+        photoView.setOnClickListener(v -> {
+            if (onImageClickListener != null) {
+                onImageClickListener.onImageClick(v, position);
             }
         });
-        photoView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (onImageClickListener != null) {
-                    onImageClickListener.onImageLongClick(v, position);
-                }
-                return true;
+        photoView.setOnLongClickListener(v -> {
+            if (onImageClickListener != null) {
+                onImageClickListener.onImageLongClick(v, position);
             }
+            return true;
         });
         Logger.t(TAG).d("instantiateItem");
         return contentView;
@@ -131,44 +110,50 @@ public class PictureAdapter extends PagerAdapter {
         return view == object;
     }
 
-    public interface OnImageClickListener {
+    public interface onImageClickListener {
         void onImageClick(View view, int position);
 
         void onImageLongClick(View view, int position);
     }
 
-    public void setOnImageClickListener(PictureAdapter.OnImageClickListener onImageClickListener) {
+    public void setOnImageClickListener(PictureAdapter.onImageClickListener onImageClickListener) {
         this.onImageClickListener = onImageClickListener;
     }
 
-    /**
-     * build glide url 重写实现
-     *
-     * @param url
-     * @return
-     */
-    protected GlideUrl buildGlideUrl(String url) {
+    private GlideUrl buildGlideUrl(String url) {
         if (TextUtils.isEmpty(url)) {
             return null;
         } else {
-
-            Uri parse = Uri.parse(url);
-            LazyHeaders.Builder builder = new LazyHeaders.Builder()
+            return new GlideUrl(url, new LazyHeaders.Builder()
                     .addHeader("Accept-Language", "zh-CN,zh;q=0.9,zh-TW;q=0.8")
-                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
-            if (parse.getHost() != null) {
-                builder.addHeader("Host", parse.getHost());
-            }
+                    // .addHeader("Host", "i.meizitu.net")
+                    .addHeader("Referer", "https://www.mzitu.com/204607")
+                    .addHeader(":authority", "i5.mmzztt.com")
+                    .addHeader(":path", "/2019/09/25b01.jpg")
+                    .addHeader(":method", "GET")
+                    .addHeader(":scheme", "https")
+                    .addHeader("accept", "image/webp,image/apng,image/*,*/*;q=0.8")
+                    .addHeader("accept-encoding", "gzip, deflate, br")
+                    .addHeader("cache-control", "no-cache")
+                    .addHeader("pragma", "no-cache")
+                    .addHeader("sec-fetch-mode", "no-cors")
+                    .addHeader("sec-fetch-site", "cross-site")
+                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36")
+                    .build());
+        }
+    }
 
-            if (headers != null) {
-                for (Map.Entry<String, String> h : headers.entrySet()) {
-                    if (h.getKey() != null && h.getValue() != null) {
-                        builder.addHeader(h.getKey(), h.getValue());
-                    }
-                }
-            }
-
-            return new GlideUrl(url, builder.build());
+    private GlideUrl buildGlide99MMUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        } else {
+            HttpUrl httpUrl = HttpUrl.parse(url);
+            return new GlideUrl(url, new LazyHeaders.Builder()
+                    .addHeader("Accept-Language", "zh-CN,zh;q=0.9,zh-TW;q=0.8")
+                    .addHeader("Host", httpUrl != null ? httpUrl.host() : "img.99mm.net")
+                    .addHeader("Referer", "http://www.99mm.me/")
+                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+                    .build());
         }
     }
 }

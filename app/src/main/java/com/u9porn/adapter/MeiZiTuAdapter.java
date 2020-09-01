@@ -1,8 +1,7 @@
 package com.u9porn.adapter;
 
-import android.net.Uri;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
@@ -39,11 +38,7 @@ public class MeiZiTuAdapter extends BaseQuickAdapter<MeiZiTu, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, MeiZiTu item) {
         ImageView imageView = helper.getView(R.id.iv_item_mei_zi_tu);
-
-        GlideUrl glideUrl = buildGlideUrl(item.getThumbUrl(), item.getRefer());
-
-        GlideApp.with(helper.itemView.getContext()).load(glideUrl).transition(new DrawableTransitionOptions().crossFade(300)).into(imageView);
-
+        GlideApp.with(helper.itemView.getContext()).load(buildGlideUrl(item.getThumbUrl())).transition(new DrawableTransitionOptions().crossFade(300)).into(imageView);
         int height;
         if (!heightMap.containsKey(item.getThumbUrl())) {
             height = item.getHeight() * width / item.getWidth();
@@ -56,23 +51,16 @@ public class MeiZiTuAdapter extends BaseQuickAdapter<MeiZiTu, BaseViewHolder> {
         helper.itemView.setLayoutParams(layoutParams);
     }
 
-    private GlideUrl buildGlideUrl(String url, String refer) {
+    private GlideUrl buildGlideUrl(String url) {
         if (TextUtils.isEmpty(url)) {
             return null;
         } else {
-            Uri uri = Uri.parse(url);
-            String host = uri.getHost();
-
-            LazyHeaders.Builder builder = new LazyHeaders.Builder()
-                    .addHeader("Accept-Language", "zh-CN,zh;q=0.9,zh-TW;q=0.8")
-                    .addHeader("Referer", refer)
-                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
-            if (host != null) {
-                builder.addHeader("Host", host);
-
-            }
-
-            return new GlideUrl(url, builder.build());
+            return new GlideUrl(url, new LazyHeaders.Builder()
+                    //.addHeader("Accept-Language", "zh-CN,zh;q=0.9,zh-TW;q=0.8")
+                    //.addHeader("Host", "i.meizitu.net")
+                    .addHeader("Referer", "https://www.mzitu.com/")
+                    .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36")
+                    .build());
         }
     }
 }

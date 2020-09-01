@@ -34,8 +34,8 @@ public class Browse9Presenter extends MvpBasePresenter<Browse9View> implements I
     public void loadContent(Long tid) {
         final boolean isNightModel = dataManager.isOpenNightMode();
         dataManager.loadPorn9ForumContent(tid, isNightModel)
-                .compose(RxSchedulersHelper.<F9PornContent>ioMainThread())
-                .compose(provider.<F9PornContent>bindUntilEvent(Lifecycle.Event.ON_DESTROY))
+                .compose(RxSchedulersHelper.ioMainThread())
+                .compose(provider.bindUntilEvent(Lifecycle.Event.ON_DESTROY))
                 .subscribe(new CallBackWrapper<F9PornContent>() {
 
                     @Override

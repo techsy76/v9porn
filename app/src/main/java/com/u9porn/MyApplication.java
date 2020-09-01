@@ -1,8 +1,9 @@
 package com.u9porn;
 
 import android.content.Context;
-import androidx.multidex.MultiDex;
-import androidx.appcompat.app.AppCompatDelegate;
+import android.support.multidex.MultiDex;
+import android.support.v7.app.AppCompatDelegate;
+import android.webkit.WebView;
 
 import com.helper.loadviewhelper.load.LoadViewHelper;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -34,6 +35,8 @@ public class MyApplication extends DaggerApplication {
 
     @Inject
     DataManager dataManager;
+    @Inject
+    WebView mWebView;
 
     private static MyApplication myApplication;
 
@@ -109,6 +112,9 @@ public class MyApplication extends DaggerApplication {
         return dataManager;
     }
 
+    public WebView getWebView(){
+        return mWebView;
+    }
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
         return DaggerAppComponent.builder().application(this).build();
