@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:paddingBottom="5dp"
     android:paddingLeft="5dp"
-    android:paddingRight="5dp"
     android:paddingTop="5dp"
+    android:paddingRight="5dp"
+    android:paddingBottom="5dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:paddingTop="5dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
@@ -35,10 +34,10 @@
         android:id="@+id/tv_nav_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="@string/pl_login"
         android:textColor="@color/mine_header_text_color"
@@ -55,13 +54,13 @@
         android:id="@+id/tv_nav_last_login_time"
         android:layout_width="0dp"
         android:layout_height="20dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textSize="14sp"
-        android:textColor="@color/mine_header_text_color"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="----"
+        android:textColor="@color/mine_header_text_color"
+        android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.272"
@@ -73,12 +72,12 @@
         android:id="@+id/tv_nav_last_login_ip"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:textSize="14sp"
-        android:textColor="@color/mine_header_text_color"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="----"
+        android:textColor="@color/mine_header_text_color"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.272"
@@ -90,11 +89,11 @@
         android:id="@+id/relativeLayout"
         android:layout_width="358dp"
         android:layout_height="75dp"
-        android:layout_marginBottom="4dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
         android:paddingTop="15dp"
+        android:paddingRight="20dp"
         android:paddingBottom="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tv_nav_last_login_time"
@@ -107,8 +106,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:textColor="@color/mine_header_text_color"
-            android:text="级别 1" />
+            android:text="级别 1"
+            android:textColor="@color/mine_header_text_color" />
 
         <TextView
             android:id="@+id/textView2"
@@ -116,8 +115,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginTop="5dp"
-            android:textColor="@color/mine_header_text_color"
-            android:text="新消息 0" />
+            android:text="新消息 0"
+            android:textColor="@color/mine_header_text_color" />
 
         <TextView
             android:id="@+id/textView3"
@@ -125,8 +124,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginTop="5dp"
-            android:textColor="@color/mine_header_text_color"
-            android:text="粉丝 0" />
+            android:text="粉丝 0"
+            android:textColor="@color/mine_header_text_color" />
 
         <TextView
             android:id="@+id/textView4"
@@ -135,8 +134,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:textColor="@color/mine_header_text_color"
-            android:text="关注 0" />
+            android:text="关注 0"
+            android:textColor="@color/mine_header_text_color" />
 
         <TextView
             android:id="@+id/textView5"
@@ -144,8 +143,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:textColor="@color/mine_header_text_color"
-            android:text="积分 0" />
+            android:text="积分 0"
+            android:textColor="@color/mine_header_text_color" />
     </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
-import leakcanary.LeakCanary;
 
 /**
  * 应用入口
@@ -43,7 +42,7 @@ public class MyApplication extends DaggerApplication {
         myApplication = this;
         initNightMode();
         AppLogger.initLogger();
-        initLeakCanary();
+        // initLeakCanary();
         initLoadingHelper();
         initFileDownload();
         if (!BuildConfig.DEBUG) {
