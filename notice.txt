@@ -1,0 +1,9 @@
+{
+  "noticeMessage": "
+    突突突，开车了...
+  ",
+  "noticeTime": "2019年08月30日",
+   "noticeTitle": "公告",
+   "noticeer": "Adimn",
+   "versionCode": 6
+ }
