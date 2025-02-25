@@ -48,6 +48,7 @@ public class CommonHeaderInterceptor implements Interceptor {
         if (!TextUtils.isEmpty(header) && header.equals(Api.PORN9_VIDEO_DOMAIN_NAME)) {
             //返回的地址
             Response response = chain.proceed(original);
+            response.close();
             HttpUrl httpUrl = response.request().url();
             //读取本地地址
             String url = preferencesHelper.getPorn9VideoAddress();
@@ -66,6 +67,7 @@ public class CommonHeaderInterceptor implements Interceptor {
         } else if (!TextUtils.isEmpty(header) && header.equals(Api.PORN9_FORUM_DOMAIN_NAME)) {
             //返回的地址
             Response response = chain.proceed(original);
+            response.close();
             HttpUrl httpUrl = response.request().url();
             //读取本地地址
             String url = preferencesHelper.getPorn9ForumAddress();
