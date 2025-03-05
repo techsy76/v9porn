@@ -3,6 +3,8 @@ name: Android CI
 on:
   push:
     branches: [ "mainx" ]
+    tags:
+      - '*'
   pull_request:
     branches: [ "mainx" ]
 
@@ -20,7 +22,26 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    - name: set env V9_KEY_PW
+      run: export V9_KEY_PW=${{ secrets.V9_KEY_PW }}
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew build
+      # run: ./gradlew build
+      run: ./gradlew assembleRelease
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: v9porn
+        path: app/build/outputs/apk/release/*.apk
+
+    - name: Release artifacts
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: app/build/outputs/apk/release/*.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
