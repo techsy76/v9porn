@@ -25,9 +25,8 @@ android {
             // my sign config
             storeFile file('../v9-sign.jks')
             keyAlias 'v9porn'
-            // before build. set V9_STORE_KEY & V9_KEY_PW in command line
-            storePassword System.getenv("V9_STORE_PW")
-            keyPassword System.getenv("V9_KEY_PW")
+            storePassword '123456'
+            keyPassword '123456'
         }
     }
 
